@@ -36,6 +36,6 @@ npm run create-admin -- "Administrator Name" admin@example.com "a-long-password"
    - `JWT_SECRET` to a long random secret (for example, generate 32 random bytes with `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`).
 4. Initialize the database schema once against the Railway database using the Railway PostgreSQL connection and `db/schema.sql`. Do not run it on every deploy; it contains non-idempotent `CREATE TABLE` statements.
 5. Run `npm run create-admin -- "Administrator Name" admin@example.com "a-long-password"` once with the Railway service's environment, using Railway's service shell or a one-off command.
-6. Generate a public domain for the web service. Railway supplies `PORT`; the app binds to `0.0.0.0` and exposes `/health` for deployment health checks.
+6. Set the service healthcheck path to `/health`, then generate a public domain for the web service. Railway supplies `PORT`; the app binds to `0.0.0.0`.
 
 Keep production secrets in Railway variables. `.env` files are ignored by Git.
