@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Teachers</title>
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav id="nav"></nav>
+  <main>
+    <h1>Teachers</h1>
+    <div id="app"></div>
+  </main>
+  <script src="/js/app.js"></script>
+  <script src="/js/crud-page.js"></script>
+  <script>
+    crudPage({
+      endpoint: "/api/teachers",
+      noun: "teacher",
+      columns: [
+        { key: "full_name", label: "Name" },
+        { key: "phone", label: "Phone" },
+        { key: "email", label: "Email" },
+        { key: "active", label: "Active", badge: true, format: (v) => (v ? "Yes" : "No") },
+      ],
+      fields: [
+        { name: "full_name", label: "Full name", required: true },
+        { name: "phone", label: "Phone" },
+        { name: "email", label: "Email", type: "email" },
+        { name: "active", label: "Status", type: "select", required: true,
+          options: [["true", "Active"], ["false", "Inactive"]] },
+      ],
+    });
+  </script>
+</body>
+</html>

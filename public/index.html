@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in | Deutsch Prima</title>
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="login-page">
+  <main class="login-layout">
+    <section class="login-art">
+      <img src="/img/logo.jpg" alt="Deutsch Prima Sprachschule by Omnia. Lernen, Sprechen, Wachsen.">
+    </section>
+    <section class="login-side">
+      <form id="login" class="login-card">
+        <div class="login-brand"><span class="brand-name">Deutsch Prima</span><span class="brand-sub">Sprachschule by Omnia</span></div>
+        <h1>Willkommen</h1>
+        <p class="sub">Sign in to manage students, classes and payments.</p>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required autofocus autocomplete="username"
+                 autocapitalize="off" spellcheck="false" placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="pw">
+            <input id="password" name="password" type="password" required autocomplete="current-password"
+                   placeholder="Your password">
+            <button id="pw-toggle" class="pw-toggle" type="button" aria-pressed="false">Show</button>
+          </div>
+        </div>
+        <button class="primary" type="submit">Sign in</button>
+        <p class="msg" id="msg" role="alert"></p>
+        <p class="hint">Forgot your password? Ask the academy admin.</p>
+      </form>
+    </section>
+  </main>
+  <script src="/js/app.js"></script>
+  <script>
+    const form = document.getElementById('login');
+    const msg = document.getElementById('msg');
+    const submit = form.querySelector('button[type="submit"]');
+    const password = document.getElementById('password');
+    const toggle = document.getElementById('pw-toggle');
+
+    // Already signed in? Go straight to the app.
+    api('/api/auth/me').then(() => (location.href = '/students.html')).catch(() => {});
+
+    toggle.onclick = () => {
+      const show = password.type === 'password';
+      password.type = show ? 'text' : 'password';
+      toggle.textContent = show ? 'Hide' : 'Show';
+      toggle.setAttribute('aria-pressed', String(show));
+    };
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      msg.textContent = '';
+      submit.disabled = true;
+      submit.textContent = 'Signing in\u2026';
+      try {
+        await api('/api/auth/login', 'POST', { email: form.email.value.trim(), password: password.value });
+        location.href = '/students.html';
+      } catch (err) {
+        msg.textContent = err.message;
+        submit.disabled = false;
+        submit.textContent = 'Sign in';
+      }
+    };
+  </script>
+</body>
+</html>

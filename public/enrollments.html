@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enrollments</title>
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav id="nav"></nav>
+  <main>
+    <h1>Enrollments</h1>
+    <div id="app"></div>
+  </main>
+  <script src="/js/app.js"></script>
+  <script src="/js/crud-page.js"></script>
+  <script>
+    crudPage({
+      endpoint: "/api/enrollments",
+      noun: "enrollment",
+      columns: [
+        { key: "student_name", label: "Student", href: (r) => "/student.html?id=" + r.student_id },
+        { key: "class_name", label: "Class" },
+        { key: "course_name", label: "Course" },
+        { key: "teacher_name", label: "Teacher" },
+        { key: "total_due", label: "Fee" },
+        { key: "total_paid", label: "Paid" },
+        { key: "remaining", label: "Remaining" },
+        { key: "status", label: "Status", badge: true },
+      ],
+      fields: [
+        { name: "student_id", label: "Student", type: "select", required: true, wide: true,
+          optionsFrom: { url: "/api/students", label: "full_name" } },
+        { name: "class_id", label: "Class", type: "select", required: true, wide: true,
+          optionsFrom: { url: "/api/classes",
+            label: (r) => r.name + " (" + r.course_name + ", " + (r.teacher_name || "no teacher") + ")" } },
+        { name: "price", label: "Fee (leave empty to use the course price)", type: "number" },
+        { name: "discount", label: "Discount", type: "number" },
+        { name: "status", label: "Status", type: "select", required: true,
+          options: [["active", "Active"], ["dropped", "Dropped"], ["completed", "Completed"]] },
+      ],
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Courses</title>
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav id="nav"></nav>
+  <main>
+    <h1>Courses</h1>
+    <div id="app"></div>
+  </main>
+  <script src="/js/app.js"></script>
+  <script src="/js/crud-page.js"></script>
+  <script>
+    crudPage({
+      endpoint: "/api/courses",
+      noun: "course",
+      columns: [
+        { key: "name", label: "Course", href: (r) => "/course.html?id=" + r.id },
+        { key: "level", label: "Level" },
+        { key: "total_hours", label: "Hours" },
+        { key: "price", label: "Price" },
+      ],
+      fields: [
+        { name: "name", label: "Course name (e.g. German A1)", required: true },
+        { name: "level", label: "Level (A1, A2, B1...)" },
+        { name: "total_hours", label: "Total hours", type: "number" },
+        { name: "price", label: "Price", type: "number", required: true },
+      ],
+    });
+  </script>
+</body>
+</html>

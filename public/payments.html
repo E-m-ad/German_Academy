@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payments</title>
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav id="nav"></nav>
+  <main>
+    <h1>Payments</h1>
+    <p id="summary" class="summary"></p>
+    <div id="app"></div>
+  </main>
+  <script src="/js/app.js"></script>
+  <script src="/js/crud-page.js"></script>
+  <script>
+    async function loadSummary() {
+      const s = await api("/api/payments/summary");
+      document.getElementById("summary").textContent =
+        "Received this month: " + s.received_this_month + ". Still owed by students: " + s.outstanding + ".";
+    }
+
+    crudPage({
+      endpoint: "/api/payments",
+      noun: "payment",
+      noEdit: true,
+      onLoad: loadSummary,
+      columns: [
+        { key: "paid_at", label: "Date" },
+        { key: "student_name", label: "Student", href: (r) => "/student.html?id=" + r.student_id },
+        { key: "class_name", label: "Class" },
+        { key: "amount", label: "Amount" },
+        { key: "method", label: "Method", format: (v) => v.charAt(0).toUpperCase() + v.slice(1) },
+        { key: "received_by_name", label: "Received by" },
+        { key: "note", label: "Note" },
+      ],
+      fields: [
+        { name: "enrollment_id", label: "Student and class", type: "select", required: true, wide: true,
+          optionsFrom: { url: "/api/payments/owing",
+            label: (r) => r.student_name + " (" + r.class_name + ", owes " + r.remaining + ")" } },
+        { name: "amount", label: "Amount", type: "number", required: true },
+        { name: "method", label: "Method", type: "select", required: true,
+          options: [["cash", "Cash"], ["transfer", "Bank transfer"], ["card", "Card"]] },
+        { name: "paid_at", label: "Date (leave empty for today)", type: "date" },
+        { name: "note", label: "Note" },
+      ],
+    });
+  </script>
+</body>
+</html>

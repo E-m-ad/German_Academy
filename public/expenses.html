@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Expenses</title>
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav id="nav"></nav>
+  <main>
+    <h1>Expenses</h1>
+    <p id="summary" class="summary"></p>
+    <div id="app"></div>
+  </main>
+  <script src="/js/app.js"></script>
+  <script src="/js/crud-page.js"></script>
+  <script>
+    async function loadSummary() {
+      const s = await api("/api/expenses/summary");
+      document.getElementById("summary").textContent =
+        "This month: received " + s.received + ", spent " + s.spent + ", difference " + s.balance + ".";
+    }
+
+    crudPage({
+      endpoint: "/api/expenses",
+      noun: "expense",
+      onLoad: loadSummary,
+      columns: [
+        { key: "spent_at", label: "Date" },
+        { key: "category", label: "Category" },
+        { key: "amount", label: "Amount" },
+        { key: "note", label: "Note" },
+        { key: "created_by_name", label: "Added by" },
+      ],
+      fields: [
+        { name: "category", label: "Category", type: "select", required: true,
+          options: [["Rent", "Rent"], ["Teacher pay", "Teacher pay"], ["Materials", "Materials"],
+                    ["Utilities", "Utilities"], ["Marketing", "Marketing"], ["Other", "Other"]] },
+        { name: "amount", label: "Amount", type: "number", required: true },
+        { name: "spent_at", label: "Date (leave empty for today)", type: "date" },
+        { name: "note", label: "Note" },
+      ],
+    });
+  </script>
+</body>
+</html>

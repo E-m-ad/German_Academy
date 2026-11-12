@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Classes</title>
+  <link rel="icon" href="/img/favicon.png">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav id="nav"></nav>
+  <main>
+    <h1>Classes</h1>
+    <div id="app"></div>
+  </main>
+  <script src="/js/app.js"></script>
+  <script src="/js/crud-page.js"></script>
+  <script>
+    crudPage({
+      endpoint: "/api/classes",
+      noun: "class",
+      columns: [
+        { key: "name", label: "Class" },
+        { key: "course_name", label: "Course", href: (r) => "/course.html?id=" + r.course_id },
+        { key: "teacher_name", label: "Teacher" },
+        { key: "days_of_week", label: "Days" },
+        { key: "start_date", label: "Starts" },
+        { key: "status", label: "Status", badge: true },
+      ],
+      fields: [
+        { name: "name", label: "Class name (e.g. A1 Evening)", required: true },
+        { name: "course_id", label: "Course", type: "select", required: true,
+          optionsFrom: { url: "/api/courses", label: "name" } },
+        { name: "teacher_id", label: "Teacher", type: "select",
+          optionsFrom: { url: "/api/teachers", label: "full_name" } },
+        { name: "days_of_week", label: "Days (e.g. Sat, Mon, Wed)" },
+        { name: "start_time", label: "Start time", type: "time" },
+        { name: "end_time", label: "End time", type: "time" },
+        { name: "start_date", label: "Start date", type: "date" },
+        { name: "end_date", label: "End date", type: "date" },
+        { name: "capacity", label: "Capacity", type: "number" },
+        { name: "status", label: "Status", type: "select", required: true,
+          options: [["planned", "Planned"], ["running", "Running"], ["finished", "Finished"], ["cancelled", "Cancelled"]] },
+      ],
+    });
+  </script>
+</body>
+</html>
